@@ -1,0 +1,77 @@
+- TIME (WITHOUT TIME ZONE) -> FIXED@???
+- char/varchar DEFAULT NULL -> FIXME
+
+/*
+@url http://www.postgresql.org/docs/8.4/static/datatype-numeric.html
+@url http://www.postgresql.org/docs/8.4/static/datatype-datetime.html
+TODO: NUMERIC(precision, scale)/DECIMAL(precision, scale)
+DROP TABLE IF EXISTS foos;
+CREATE TABLE foos (
+    id                  SERIAL NOT NULL PRIMARY KEY,
+    -- Tests
+    bigint_nd           bigint,
+    bigint_dn           bigint DEFAULT NULL,
+    bigserial_nd        bigserial,
+    --bigserial_dn      bigserial DEFAULT NULL,
+    boolean_nd          boolean,
+    boolean_dn          boolean DEFAULT NULL,
+    bytea_nd            bytea,
+    bytea_dn            bytea DEFAULT NULL,
+    char_nd             char,
+    char_dn             char DEFAULT NULL,
+    char5_nd            char(5),
+    char5_dn            char(5) DEFAULT NULL,
+    character_nd        character,
+    character_dn        character DEFAULT NULL,
+    date_nd             date,
+    date_dn             date DEFAULT NULL,
+    decimal_nd          decimal,
+    decimal_dn          decimal DEFAULT NULL,
+    double_nd           double precision,
+    double_dn           double precision DEFAULT NULL,
+    inet_nd             inet,
+    inet_dn             inet DEFAULT NULL,
+    integer_nd          integer,
+    integer_dn          integer DEFAULT NULL,
+    money_nd            money,
+    money_dn            money DEFAULT NULL,
+    numeric_nd          numeric,
+    numeric_dn          numeric DEFAULT NULL,
+    real_nd             real,
+    real_dn             real DEFAULT NULL,
+    serial_nd           serial,
+    --serial_dn         serial DEFAULT NULL,
+    smallint_nd         smallint,
+    smallint_dn         smallint DEFAULT NULL,
+    text_nd             text,
+    text_dn             text DEFAULT NULL,
+    time_nd             time,
+    time_dn             time DEFAULT NULL,
+    time_wtz_nd         time without time zone,
+    time_wtz_dn         time without time zone DEFAULT NULL,
+    timestamp_nd        timestamp,
+    timestamp_dn        timestamp DEFAULT NULL,
+    timestamp_wtz_nd    timestamp without time zone,
+    timestamp_wtz_dn	timestamp without time zone DEFAULT NULL,
+    uuid_nd             uuid,
+    uuid_dn             uuid DEFAULT NULL,
+    varchar5_nd         varchar(5),
+    varchar5_dn         varchar(5) DEFAULT NULL
+);
+DROP TABLE IF EXISTS foos;
+CREATE TABLE foos (
+    id				SERIAL NOT NULL PRIMARY KEY,
+    -- KO
+    char_nd         CHAR(1),
+    char_dn         CHAR(1) DEFAULT NULL,
+    varchar_nd      VARCHAR(10),
+    varchar_dn      VARCHAR(10) DEFAULT NULL,
+    -- OK
+    bigint_nd       BIGINT,
+    bigint_dn       BIGINT DEFAULT NULL,
+    boolean_nd      BOOLEAN,
+    boolean_dn      BOOLEAN DEFAULT NULL,
+    date_nd         DATE,
+    date_dn         DATE DEFAULT NULL
+);
+*/

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DatabasePlugin" default="build" basedir="../../../../">
+	<property name="dir.ant.build" value="${basedir}/tmp/quality/Database" />
+	<property name="dir.ant.logs" value="${basedir}/logs/quality/Database" />
+	<property name="dir.ant.artifacts" value="${dir.ant.logs}/artifacts" />
+	<property name="dir.cakephp.app" value="${basedir}" />
+	<property name="dir.cakephp.plugin" value="${dir.cakephp.app}/plugins/Database" />
+	<property name="dir.cakephp.tmp" value="${dir.cakephp.app}/tmp" />
+	<property name="file.phpmd.ruleset" value="${dir.cakephp.plugin}/vendor/Jenkins/phpmd.xml" />
+	<property name="file.phpunit.config" value="${dir.cakephp.plugin}/vendor/Jenkins/phpunit.xml" />
+	<property name="ignorelist" value="*/tests/*,*/vendor/*" />
+
+	<!-- Build -->
+	<target name="quality" depends="clean,lint,phpunit,phploc,phpdoc,phpcs,phpmd,pdepend,phpcpd,phpcb"/>
+	<target name="build" depends="lint,phpunit"/>
+	<target name="lint" depends="php-lint,sql-lint,po-lint,js-lint,css-lint"/>
+
+	<!-- Nettoyage du répertoire tmp de CakePHP et des logs précédents -->
+	<target name="clear">
+		<delete verbose="true">
+			<fileset dir="${dir.cakephp.tmp}" excludes="**/.svn,**/empty" />
+		</delete>
+        <delete dir="${dir.ant.logs}" verbose="true" />
+	</target>
+
+	<!-- Création des répertoires -->
+	<target name="clean" depends="clear">
+		<mkdir dir="${dir.ant.logs}" />
+		<mkdir dir="${dir.ant.logs}/api" />
+		<mkdir dir="${dir.ant.artifacts}" />
+		<mkdir dir="${dir.ant.logs}/coverage" />
+		<mkdir dir="${dir.ant.logs}/php-code-browser" />
+	</target>
+
+	<!-- Vérification de la syntaxe des fichiers .php et .ctp -->
+	<target name="php-lint">
+		<apply executable="php" dir="${dir.cakephp.plugin}" failonerror="on" logerror="on">
+			<arg line="-l"/>
+			<fileset
+				dir="${dir.cakephp.plugin}"
+				includes="**/*.php,**/*.ctp"
+				excludes="" />
+		</apply>
+	</target>
+
+	<!--
+		Vérification de la syntaxe des fichiers SQL par le parseur de DatabaseQL
+
+		sudo apt-get install python-pip
+		sudo apt-get install libecpg-dev
+		sudo pip install pgsanity
+	-->
+	<target name="sql-lint">
+		<exec executable="bash" failonerror="on" logerror="on">
+		  <arg value="-c"/>
+		  <arg value="find ${dir.cakephp.plugin} -name '*.sql' | xargs pgsanity"/>
+		</exec>
+	</target>
+
+	<!--
+		Vérification de la syntaxe des fichiers .po
+		@url http://stackoverflow.com/questions/9880259/detecting-errors-in-po-files
+
+		Lorsque plusieurs traductions du même msgid sont présentes dans un fichier
+		.po, c'est la dernière qui est prise en compte.
+
+                sudo aptitude install gettext
+	-->
+	<target name="po-lint">
+		<apply executable="msgfmt" dir="${dir.cakephp.plugin}" failonerror="on" logerror="on">
+			<arg line="-v"/>
+			<arg line="-C"/>
+			<arg line="-o /dev/null"/>
+			<fileset
+				dir="${dir.cakephp.plugin}"
+				includes="**/*.po"
+				excludes="" />
+		</apply>
+	</target>
+
+	<!--
+		Vérification de la syntaxe des fichiers .js
+		@url http://ariya.ofilabs.com/2012/10/javascript-validator-with-esprima.html
+
+		sudo aptitude install nodejs nodejs-legacy npm
+		sudo npm install -g esprima
+	-->
+	<target name="js-lint">
+		<apply executable="esvalidate" dir="${dir.cakephp.plugin}" failonerror="on" logerror="on">
+			<fileset dir="${dir.cakephp.plugin}" includes="**/**.js"/>
+		</apply>
+	</target>
+
+	<!--
+		Vérification de la syntaxe des fichiers .css
+		@url https://github.com/stubbornella/csslint/wiki/Command-line-interface
+
+		sudo aptitude install nodejs nodejs-legacy npm
+		sudo npm install -g csslint
+	-->
+	<target name="css-lint">
+		<apply executable="csslint" dir="${dir.cakephp.plugin}" failonerror="on" logerror="on">
+			<arg line="--format=compact"/>
+			<arg line="--warnings=display-property-grouping,duplicate-properties,empty-rules,known-properties"/>
+			<fileset dir="${dir.cakephp.plugin}" includes="**/**.css"/>
+		</apply>
+	</target>
+
+	<!-- Tests untaires pour la qualité, avec écriture des résultats -->
+	<target name="phpunit" depends="clean,php-lint">
+		<exec executable="vendor/bin/phpunit" dir="${basedir}" failonerror="true">
+			<arg line="--report-useless-tests
+                       --verbose
+                       --debug
+					   --configuration ${file.phpunit.config}
+					   --log-junit ${dir.ant.logs}/phpunit.xml
+                       --coverage-html ${dir.ant.logs}/coverage
+					   --coverage-clover ${dir.ant.logs}/phpunit.coverage.xml
+                       plugins/Database/" />
+		</exec>
+	</target>
+
+	<target name="phploc" depends="clean,php-lint">
+		<exec executable="phploc">
+			<arg value="--log-csv" />
+			<arg value="${dir.ant.logs}/phploc.csv" />
+			<arg path="${dir.cakephp.plugin}" />
+		</exec>
+	</target>
+
+	<!--
+		Documentation:
+			pear channel-discover pear.phpdoc.org
+			pear install phpdoc/phpDocumentor-alpha
+			extension=xmlreader.so
+			extension=xsl.so
+
+			@see http://www.phpdoc.org/
+			@see http://daringfireball.net/projects/markdown/syntax
+	-->
+	<target name="phpdoc" depends="clean,php-lint">
+		<exec executable="phpdoc" dir="${dir.cakephp.plugin}" failonerror="false" logerror="on">
+			<arg line="--title '${ant.project.name}'
+				-t ${dir.ant.logs}/api
+				-i ${ignorelist}
+				-d ."/>
+			</exec>
+	</target>
+
+	<!-- Checkstyle -->
+	<target name="phpcs" depends="clean,php-lint">
+		<exec executable="vendor/bin/phpcs"
+			  dir="${basedir}"
+			  failonerror="false">
+			<arg line="--standard=CakePHP
+                       --extensions=php,ctp
+                       --report-checkstyle=${dir.ant.logs}/phpcs.xml
+                       ${dir.cakephp.plugin}/src ${dir.cakephp.plugin}/tests" />
+		</exec>
+	</target>
+
+	<!-- Mess detector -->
+	<target name="phpmd" depends="clean,php-lint">
+		<exec executable="phpmd"
+			dir="${dir.cakephp.plugin}"
+			failonerror="false">
+			<arg line="${dir.cakephp.plugin}/src,${dir.cakephp.plugin}/tests
+                       xml ${file.phpmd.ruleset}
+                       --suffixes=.php,.ctp
+                       --reportfile ${dir.ant.logs}/phpmd.xml"/>
+		</exec>
+	</target>
+
+	<!-- Dépendences -->
+	<target name="pdepend" depends="clean,php-lint">
+		<exec executable="pdepend"
+			dir="${dir.cakephp.plugin}"
+			failonerror="false">
+			<arg line="--jdepend-xml=${dir.ant.logs}/jdepend.xml
+				--jdepend-chart=${dir.ant.artifacts}/10-dependencies.svg
+				--overview-pyramid=${dir.ant.artifacts}/11-overview.svg
+				--ignore=${ignorelist}
+				." />
+		</exec>
+	</target>
+
+	<!-- Copy/paste detector -->
+	<!--
+		-exclude Test
+		-exclude webroot/test.php
+		-exclude webroot/index.php
+	-->
+	<target name="phpcpd" depends="clean,php-lint">
+		<exec executable="phpcpd"
+			dir="${dir.cakephp.plugin}"
+			failonerror="false">
+			<arg line="--log-pmd ${dir.ant.logs}/pmd-cpd.xml
+				--min-lines 5
+				--min-tokens 70
+				--exclude ${ignorelist}
+				--names *.php,*.ctp
+				." />
+		</exec>
+	</target>
+
+	<!-- Code browser -->
+	<target name="phpcb" depends="clean,php-lint">
+		<exec executable="phpcb"
+			dir="${dir.cakephp.plugin}"
+			failonerror="false">
+			<arg line="--log ${dir.ant.logs}
+				--source ${dir.cakephp.plugin}
+				-E /\/(vendor)\//
+				--output ${dir.ant.logs}/php-code-browser
+				--crapThreshold=10
+			." />
+		</exec>
+	</target>
+</project>
