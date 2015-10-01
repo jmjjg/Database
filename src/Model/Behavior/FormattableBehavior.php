@@ -11,15 +11,15 @@ use Cake\ORM\Behavior;
 use Cake\Utility\Inflector;
 
 /**
- * This behavior provides a mechanisme for applying formatters to field values
+ * This behavior provides a mechanism for applying formatters to field values
  * before validation or saving.
  *
  * Config keys:
- *  - cache: wether or not to use the cache,
+ *  - cache: wether or not to use the cache; boolean default NULL is equivalent to true
  *  - formatters: a list of formatters that need to be functions or static
  *    methods, with their fully qualified namespace as keys.
  *
- * Accepted values are boolean true and false, field name as a regular expression
+ * Accepted formatters values are boolean true and false, field name as a regular expression
  * string, field type as a string, array of strings, an array with a NOT key whose
  * value can be a string or an array.
  */
