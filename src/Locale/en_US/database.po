@@ -1,0 +1,46 @@
+# Traductions de default.po
+# @license: CeCiLL V2 (http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
+#
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+# ==============================================================================
+
+msgid "Validate::boolean"
+msgstr "Please enter a boolean value"
+
+msgid "Validate::date"
+msgstr "Please enter a correct date"
+
+msgid "Validate::datetime"
+msgstr "Please enter a correct date and time"
+
+msgid "Validate::isInteger"
+msgstr "Please enter a integer value"
+
+msgid "Validate::maxLength"
+msgstr "Please enter %d caracters maximum"
+
+msgid "Validate::numeric"
+msgstr "Please enter a number"
+
+msgid "Validate::time"
+msgstr "Please enter a correct time"
+
+# ------------------------------------------------------------------------------
+
+msgid "Validate::requirePresence"
+msgstr "Required field"
+
+msgid "Validate::notEmpty"
+msgstr "Required field"
+
+msgid "Validate::isUnique"
+msgstr "Value already in use"
+
+msgid "Validate::existsIn"
+msgstr "Non-existant value"
