@@ -5,11 +5,11 @@
  */
 namespace Database\Test\TestCase\Model\Behavior;
 
-use Cake\ORM\Table;
+use Cake\Core\Plugin;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
-require_once dirname(__FILE__) . DS . '..' . DS . '..' . DS . '..' . DS . 'Fixture' . DS . 'items_table.php';
+require_once Plugin::classPath('Database') . DS . '..' . DS . 'tests' . DS . 'Fixture' . DS . 'items_table.php';
 
 /**
  * The class Database.FormattableBehaviorTest is responsible for testing the
@@ -113,7 +113,7 @@ class FormattableBehaviorTest extends TestCase
         ];
         $item = $this->Items->newEntity($data);
 
-        $this->assertEquals(' ', $item->id);
+        $this->assertEquals(null, $item->id);
         $this->assertEquals(' ', $item->name);
         $this->assertEquals(5, $item->parent_id);
         $this->assertEquals(3.65, $item->price);
