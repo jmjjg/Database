@@ -120,8 +120,8 @@ class AutovalidateBehavior extends Behavior
     protected function cacheKey()
     {
         if ($this->cacheKey === null) {
-            $plugin = Inflector::underscore(namespaceRoot(__CLASS__));
-            $class = Inflector::underscore(namespaceTail(__CLASS__));
+            $plugin = Inflector::underscore(\Database\namespaceRoot(__CLASS__));
+            $class = Inflector::underscore(\Database\namespaceTail(__CLASS__));
             $connection = Inflector::underscore($this->_table->connection()->configName());
             $table = Inflector::underscore($this->_table->table());
             $lang = strtolower(ini_get('intl.default_locale'));

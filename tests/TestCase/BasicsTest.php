@@ -20,10 +20,10 @@ class BasicsTest extends TestCase
     public function testNamespaceRoot()
     {
         // No namespace
-        $this->assertEquals(null, namespaceRoot('Foo'));
+        $this->assertEquals(null, \Database\namespaceRoot('Foo'));
 
         // A namespace
-        $this->assertEquals('Foo', namespaceRoot('Foo\\Bar\\Baz'));
+        $this->assertEquals('Foo', \Database\namespaceRoot('Foo\\Bar\\Baz'));
     }
 
     /**
@@ -34,9 +34,9 @@ class BasicsTest extends TestCase
     public function testNamespaceTail()
     {
         // No namespace
-        $this->assertEquals('Foo', namespaceTail('Foo'));
+        $this->assertEquals('Foo', \Database\namespaceTail('Foo'));
 
         // A namespace
-        $this->assertEquals('Baz', namespaceTail('Foo\\Bar\\Baz'));
+        $this->assertEquals('Baz', \Database\namespaceTail('Foo\\Bar\\Baz'));
     }
 }

@@ -72,3 +72,9 @@ Note that NULL and boolean TRUE and are equivalent as configuration values.
             );
         // ...
     }
+
+### Code quality
+```bash
+sudo bash -c "( rm -r logs/quality ; find . -type f -regex '^\./\(logs/.*\.log\|tmp/.*\)$' ! -name 'empty' -exec rm {} \; )"
+sudo -u apache ant quality -f plugins/Database/vendor/Jenkins/build.xml
+```
