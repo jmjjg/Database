@@ -6,6 +6,7 @@
 	<property name="dir.cakephp.app" value="${basedir}" />
 	<property name="dir.cakephp.plugin" value="${dir.cakephp.app}/plugins/Database" />
 	<property name="dir.cakephp.tmp" value="${dir.cakephp.app}/tmp" />
+	<property name="file.phpcs.ruleset" value="${dir.cakephp.plugin}/vendor/Jenkins/phpcs.xml" />
 	<property name="file.phpmd.ruleset" value="${dir.cakephp.plugin}/vendor/Jenkins/phpmd.xml" />
 	<property name="file.phpunit.config" value="${dir.cakephp.plugin}/vendor/Jenkins/phpunit.xml" />
 	<property name="ignorelist" value="*/tests/*,*/vendor/*" />
@@ -148,12 +149,14 @@
 	</target>
 
 	<!-- Checkstyle -->
+    <!--mv vendor/wimg/php-compatibility vendor/wimg/PHPCompatibility-->
 	<target name="phpcs" depends="clean,php-lint">
 		<exec executable="vendor/bin/phpcs"
 			  dir="${basedir}"
 			  failonerror="false">
-			<arg line="--standard=CakePHP
+			<arg line="--standard=${file.phpcs.ruleset}
                        --extensions=php,ctp
+                       --runtime-set testVersion 5.6-7.0
                        --report-checkstyle=${dir.ant.logs}/phpcs.xml
                        ${dir.cakephp.plugin}/src ${dir.cakephp.plugin}/tests" />
 		</exec>
@@ -185,11 +188,6 @@
 	</target>
 
 	<!-- Copy/paste detector -->
-	<!--
-		-exclude Test
-		-exclude webroot/test.php
-		-exclude webroot/index.php
-	-->
 	<target name="phpcpd" depends="clean,php-lint">
 		<exec executable="phpcpd"
 			dir="${dir.cakephp.plugin}"

@@ -99,7 +99,7 @@ class FormattableBehaviorTest extends TestCase
                 'className' => 'Database.Formattable',
                 'cache' => false,
                 'formatters' => [
-                    '\\Database\\Utility\\Formatter::trim' => false
+                    '\\Database\\Utility\\Formatter::formatTrim' => false
                 ]
             ]
         );

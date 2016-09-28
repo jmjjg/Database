@@ -40,69 +40,69 @@ class FormatterTest extends TestCase
     }
 
     /**
-     * Tests for the Formatter::trim() method.
+     * Tests for the Formatter::formatTrim() method.
      */
-    public function testTrim()
+    public function testFormatTrim()
     {
-        $this->assertEquals('Foo', Formatter::trim('Foo'));
-        $this->assertEquals('Foo', Formatter::trim(" Foo\t\n"));
-        $this->assertEquals(false, Formatter::trim(false));
+        $this->assertEquals('Foo', Formatter::formatTrim('Foo'));
+        $this->assertEquals('Foo', Formatter::formatTrim(" Foo\t\n"));
+        $this->assertEquals(false, Formatter::formatTrim(false));
     }
 
     /**
-     * Test for the Formatter::null() method.
+     * Test for the Formatter::formatNull() method.
      */
-    public function testNull()
+    public function testFormatNull()
     {
-        $this->assertEquals(null, Formatter::null(''));
-        $this->assertEquals(' ', Formatter::null(' '));
-        $this->assertEquals(false, Formatter::null(false));
+        $this->assertEquals(null, Formatter::formatNull(''));
+        $this->assertEquals(' ', Formatter::formatNull(' '));
+        $this->assertEquals(false, Formatter::formatNull(false));
     }
 
     /**
-     * Test for the Formatter::suffix() method.
+     * Test for the Formatter::formatSuffix() method.
      */
-    public function testSuffix()
+    public function testFormatSuffix()
     {
-        $this->assertEquals('6', Formatter::suffix('6'));
-        $this->assertEquals('', Formatter::suffix('_'));
-        $this->assertEquals('5', Formatter::suffix('1_5'));
-        $this->assertEquals('7', Formatter::suffix('1_5_7'));
+        $this->assertEquals('6', Formatter::formatSuffix('6'));
+        $this->assertEquals('', Formatter::formatSuffix('_'));
+        $this->assertEquals('5', Formatter::formatSuffix('1_5'));
+        $this->assertEquals('7', Formatter::formatSuffix('1_5_7'));
     }
 
     /**
-     * Test for the Formatter::integer() method.
+     * Test for the Formatter::formatInteger() method.
      */
-    public function testInteger()
+    public function testFormatInteger()
     {
         ini_set('intl.default_locale', 'fr_FR');
-        $this->assertEquals('6', Formatter::integer('6'));
-        $this->assertEquals('Foo', Formatter::integer('Foo'));
-        $this->assertEquals('6.35', Formatter::integer('6.35'));
-        $this->assertEquals('1234567', Formatter::integer('1 234 567,891'));
+        $this->assertEquals('6', Formatter::formatInteger('6'));
+        $this->assertEquals('Foo', Formatter::formatInteger('Foo'));
+        $this->assertEquals('6.35', Formatter::formatInteger('6.35'));
+        $this->assertEquals('1234567', Formatter::formatInteger('1 234 567,891'));
 
         ini_set('intl.default_locale', 'de_DE');
-        $this->assertEquals('6', Formatter::integer('6'));
-        $this->assertEquals('Foo', Formatter::integer('Foo'));
-        $this->assertEquals('6.35', Formatter::integer('6.35'));
-        $this->assertEquals('1234567', Formatter::integer('1.234.567,891'));
+        $this->assertEquals('6', Formatter::formatInteger('6'));
+        $this->assertEquals('Foo', Formatter::formatInteger('Foo'));
+        $this->assertEquals('6.35', Formatter::formatInteger('6.35'));
+        $this->assertEquals('1234567', Formatter::formatInteger('1.234.567,891'));
     }
 
     /**
-     * Test for the Formatter::decimal() method.
+     * Test for the Formatter::formatDecimal() method.
      */
-    public function testDecimal()
+    public function testFormatDecimal()
     {
         ini_set('intl.default_locale', 'fr_FR');
-        $this->assertEquals('6', Formatter::decimal('6'));
-        $this->assertEquals('Foo', Formatter::decimal('Foo'));
-        $this->assertEquals('6.35', Formatter::decimal('6.35'));
-        $this->assertEquals('1234567.891', Formatter::decimal('1 234 567,891'));
+        $this->assertEquals('6', Formatter::formatDecimal('6'));
+        $this->assertEquals('Foo', Formatter::formatDecimal('Foo'));
+        $this->assertEquals('6.35', Formatter::formatDecimal('6.35'));
+        $this->assertEquals('1234567.891', Formatter::formatDecimal('1 234 567,891'));
 
         ini_set('intl.default_locale', 'de_DE');
-        $this->assertEquals('6', Formatter::decimal('6'));
-        $this->assertEquals('Foo', Formatter::decimal('Foo'));
-        $this->assertEquals('6.35', Formatter::decimal('6.35'));
-        $this->assertEquals('1234567.891', Formatter::decimal('1.234.567,891'));
+        $this->assertEquals('6', Formatter::formatDecimal('6'));
+        $this->assertEquals('Foo', Formatter::formatDecimal('Foo'));
+        $this->assertEquals('6.35', Formatter::formatDecimal('6.35'));
+        $this->assertEquals('1234567.891', Formatter::formatDecimal('1.234.567,891'));
     }
 }

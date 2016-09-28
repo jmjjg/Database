@@ -33,11 +33,11 @@ class FormattableBehavior extends Behavior
     protected $_defaultConfig = [
         'cache' => null,
         'formatters' => [
-            '\\Database\\Utility\\Formatter::suffix' => '/_id$/',
-            '\\Database\\Utility\\Formatter::trim' => [ 'NOT' => 'binary'],
-            '\\Database\\Utility\\Formatter::null' => true,
-            '\\Database\\Utility\\Formatter::integer' => ['integer', 'biginteger'],
-            '\\Database\\Utility\\Formatter::decimal' => ['decimal', 'float', 'numeric']
+            '\\Database\\Utility\\Formatter::formatSuffix' => '/_id$/',
+            '\\Database\\Utility\\Formatter::formatTrim' => [ 'NOT' => 'binary'],
+            '\\Database\\Utility\\Formatter::formatNull' => true,
+            '\\Database\\Utility\\Formatter::formatInteger' => ['integer', 'biginteger'],
+            '\\Database\\Utility\\Formatter::formatDecimal' => ['decimal', 'float', 'numeric']
         ]
     ];
 

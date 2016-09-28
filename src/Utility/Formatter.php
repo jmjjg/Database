@@ -18,7 +18,7 @@ abstract class Formatter
      * @param mixed $value The value to trim
      * @return mixed
      */
-    public static function trim($value)
+    public static function formatTrim($value)
     {
         if (is_string($value)) {
             $value = trim($value);
@@ -33,7 +33,7 @@ abstract class Formatter
      * @param mixed $value The value to nullify
      * @return mixed
      */
-    public static function null($value)
+    public static function formatNull($value)
     {
         if ($value === '') {
             $value = null;
@@ -50,7 +50,7 @@ abstract class Formatter
      * @param string $separator The string separator
      * @return mixed
      */
-    public static function suffix($value, $separator = '_')
+    public static function formatSuffix($value, $separator = '_')
     {
         if (is_string($value)) {
             $position = strrpos($value, $separator);
@@ -75,7 +75,7 @@ abstract class Formatter
      * @param mixed $value The value to parse
      * @return mixed
      */
-    public static function integer($value)
+    public static function formatInteger($value)
     {
         if (is_int($value) === false) {
             $formatter = new \NumberFormatter(ini_get('intl.default_locale'), \NumberFormatter::INTEGER_DIGITS);
@@ -95,7 +95,7 @@ abstract class Formatter
      * @param mixed $value The value to parse
      * @return mixed
      */
-    public static function decimal($value)
+    public static function formatDecimal($value)
     {
         if (is_numeric($value) === false) {
             $formatter = new \NumberFormatter(ini_get('intl.default_locale'), \NumberFormatter::DECIMAL);

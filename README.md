@@ -6,7 +6,7 @@ CakePHP 3 plugin that provides classes for adding default validation rules from 
 
 Caching is enabled by default but can be disabled in the configuration or at run-time.
 
-Tested with CakePHP 3.1.0-RC1 only.
+Tested with  3.2.2 only (was -CakePHP 3.1.0-RC1-).
 
 ## Main classes
 
@@ -58,15 +58,15 @@ Note that NULL and boolean TRUE and are equivalent as configuration values.
                             // * other strings are used to filter field types
                     'formatters' => [
                         // Extract the part after the last "_" character
-                        '\\Database\\Utility\\Formatter::suffix' => '/_id$/',
+                        '\\Database\\Utility\\Formatter::formatSuffix' => '/_id$/',
                         // Trim the value
-                        '\\Database\\Utility\\Formatter::trim' => [ 'NOT' => 'binary'],
+                        '\\Database\\Utility\\Formatter::formatTrim' => [ 'NOT' => 'binary'],
                         // Transform empty string to a NULL value
-                        '\\Database\\Utility\\Formatter::null' => true,
+                        '\\Database\\Utility\\Formatter::formatNull' => true,
                         // Tries to parse an integer value using the current intl.default_locale value
-                        '\\Database\\Utility\\Formatter::integer' => ['integer', 'biginteger'],
+                        '\\Database\\Utility\\Formatter::formatInteger' => ['integer', 'biginteger'],
                         // Tries to parse a decimal value using the current intl.default_locale value
-                        '\\Database\\Utility\\Formatter::decimal' => ['decimal', 'float', 'numeric']
+                        '\\Database\\Utility\\Formatter::formatDecimal' => ['decimal', 'float', 'numeric']
                     ]
                 ]
             );
