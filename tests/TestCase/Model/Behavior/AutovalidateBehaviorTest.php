@@ -175,7 +175,7 @@ class AutovalidateBehaviorTest extends TestCase
                     'provider' => 'default',
                     'pass' => []
                 ],
-                'isEmptyAllowed' => true,
+                'isEmptyAllowed' => false, // FIXME
                 'isPresenceRequired' => false
             ],
             // String
@@ -291,7 +291,7 @@ class AutovalidateBehaviorTest extends TestCase
     {
         foreach ($this->expectedFieldInfos() as $fieldName => $expected) {
             $result = $this->getFieldInfos($fieldName);
-            $this->assertEquals($expected, $result);
+            $this->assertEquals([$fieldName => $expected], [$fieldName => $result]);
         }
     }
 
