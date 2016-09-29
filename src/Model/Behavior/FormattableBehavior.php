@@ -9,6 +9,7 @@ use ArrayObject;
 use Cake\Cache\Cache;
 use Cake\ORM\Behavior;
 use Cake\Utility\Inflector;
+use Database\Utility\CodeLogic;
 
 /**
  * This behavior provides a mechanism for applying formatters to field values
@@ -71,8 +72,8 @@ class FormattableBehavior extends Behavior
     protected function cacheKey()
     {
         if ($this->cacheKey === null) {
-            $plugin = Inflector::underscore(\Database\namespaceRoot(__CLASS__));
-            $class = Inflector::underscore(\Database\namespaceTail(__CLASS__));
+            $plugin = Inflector::underscore(CodeLogic::root(__CLASS__));
+            $class = Inflector::underscore(CodeLogic::tail(__CLASS__));
             $connection = Inflector::underscore($this->_table->connection()->configName());
             $table = Inflector::underscore($this->_table->table());
             $this->cacheKey = $plugin . '_' . $class . '_' . $connection . '_' . $table;

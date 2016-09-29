@@ -11,6 +11,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use Database\Utility\CodeLogic;
 
 /**
  * The class AutoValidateBehavior from the Database plugin automatically adds
@@ -120,8 +121,8 @@ class AutovalidateBehavior extends Behavior
     protected function cacheKey()
     {
         if ($this->cacheKey === null) {
-            $plugin = Inflector::underscore(\Database\namespaceRoot(__CLASS__));
-            $class = Inflector::underscore(\Database\namespaceTail(__CLASS__));
+            $plugin = Inflector::underscore(CodeLogic::root(__CLASS__));
+            $class = Inflector::underscore(CodeLogic::tail(__CLASS__));
             $connection = Inflector::underscore($this->_table->connection()->configName());
             $table = Inflector::underscore($this->_table->table());
             $lang = strtolower(ini_get('intl.default_locale'));
