@@ -20,7 +20,7 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
-  <customWorkspace>/var/www/htdocs/cakephp/3.1.x/3.1.x-dev</customWorkspace>
+  <customWorkspace>/var/www/htdocs/cakephp/3.2.x/3.2.2</customWorkspace>
   <builders>
     <hudson.tasks.Ant plugin="ant@1.2">
       <targets>quality</targets>
