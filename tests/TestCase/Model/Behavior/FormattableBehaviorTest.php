@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Source code for the Database.FormattableBehavior unit test class.
  *
@@ -14,9 +15,12 @@ require_once Plugin::classPath('Database') . DS . '..' . DS . 'tests' . DS . 'Fi
 /**
  * The class Database.FormattableBehaviorTest is responsible for testing the
  * Database.FormattableBehavior class.
+ *
+ * @fixme: be sure to remove App global config for the tests
  */
 class FormattableBehaviorTest extends TestCase
 {
+
     /**
      * fixtures
      *

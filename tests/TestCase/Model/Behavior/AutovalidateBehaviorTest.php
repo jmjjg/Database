@@ -1,13 +1,16 @@
 <?php
+
 /**
  * Source code for the Database.AutovalidateBehavior unit test class.
  *
  */
 namespace Database\Test\TestCase\Model\Behavior;
 
-use Cake\ORM\Table;
+use Cake\Cache\Cache;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Database\Utility\CodeLogic\ConfigureKey;
 
 require_once dirname(__FILE__) . DS . '..' . DS . '..' . DS . '..' . DS . 'Fixture' . DS . 'items_table.php';
 
@@ -195,7 +198,6 @@ class AutovalidateBehaviorTest extends TestCase
                     'message' => __d('database', 'Validate::isUnique'),
                     'provider' => 'table',
                     'pass' => []
-
                 ],
                 'isEmptyAllowed' => false,
                 'isPresenceRequired' => 'create'
@@ -229,6 +231,22 @@ class AutovalidateBehaviorTest extends TestCase
         ];
     }
     // @codingStandardsIgnoreEnd
+
+    protected function clear($alias, array $params = [])
+    {
+        $params += ['config' => true, 'cache' => true];
+
+        if (true === $params['config']) {
+            $key = $this->Items->behaviors()->get($alias)->cacheKey();
+            Cache::delete($key);
+        }
+
+        if (true === $params['cache']) {
+            $behavior = $this->Items->behaviors()->get($alias);
+            $key = ConfigureKey::fqn($behavior);
+            Configure::write($key, null);
+        }
+    }
 
     /**
      * setUp() method
@@ -289,6 +307,10 @@ class AutovalidateBehaviorTest extends TestCase
      */
     public function testFieldInfos()
     {
+        $this->clear('DatabaseAutovalidate');
+        // @fixme
+        Configure::write('plugin.Database.AutovalidateBehavior', true);
+
         foreach ($this->expectedFieldInfos() as $fieldName => $expected) {
             $result = $this->getFieldInfos($fieldName);
             $this->assertEquals([$fieldName => $expected], [$fieldName => $result]);
@@ -302,6 +324,8 @@ class AutovalidateBehaviorTest extends TestCase
      */
     public function testIsUniqueConstraint()
     {
+        $this->clear('DatabaseAutovalidate');
+
         // 1. First record to populate the database
         $item = $this->Items->newEntity($this->data);
         $this->assertTrue($this->Items->save($item) !== false);
@@ -323,6 +347,8 @@ class AutovalidateBehaviorTest extends TestCase
      */
     public function testExistsInConstraint()
     {
+        $this->clear('DatabaseAutovalidate');
+
         // 1. First record to populate the database
         $item = $this->Items->newEntity($this->data);
         $this->assertTrue($this->Items->save($item) !== false);
@@ -339,4 +365,6 @@ class AutovalidateBehaviorTest extends TestCase
         ];
         $this->assertEquals($notExistsIn->errors('parent_id'), $expected);
     }
+
+    // $this->clear('DatabaseAutovalidate');
 }

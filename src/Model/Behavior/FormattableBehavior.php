@@ -7,9 +7,8 @@ namespace Database\Model\Behavior;
 
 use ArrayObject;
 use Cake\Cache\Cache;
-use Cake\ORM\Behavior;
-use Cake\Utility\Inflector;
-use Database\Utility\CodeLogic;
+use Database\Model\Behavior\AbstractDatabaseBehavior;
+use Database\Utility\CodeLogic\CacheKey;
 
 /**
  * This behavior provides a mechanism for applying formatters to field values
@@ -24,7 +23,7 @@ use Database\Utility\CodeLogic;
  * string, field type as a string, array of strings, an array with a NOT key whose
  * value can be a string or an array.
  */
-class FormattableBehavior extends Behavior
+class FormattableBehavior extends AbstractDatabaseBehavior
 {
     /**
      * Default configuration.
@@ -72,11 +71,7 @@ class FormattableBehavior extends Behavior
     protected function cacheKey()
     {
         if ($this->cacheKey === null) {
-            $plugin = Inflector::underscore(CodeLogic::root(__CLASS__));
-            $class = Inflector::underscore(CodeLogic::tail(__CLASS__));
-            $connection = Inflector::underscore($this->_table->connection()->configName());
-            $table = Inflector::underscore($this->_table->table());
-            $this->cacheKey = $plugin . '_' . $class . '_' . $connection . '_' . $table;
+            $this->cacheKey = CacheKey::behavior($this) . '_' . CacheKey::table($this->_table);
         }
 
         return $this->cacheKey;
@@ -170,10 +165,12 @@ class FormattableBehavior extends Behavior
     protected function formatters()
     {
         if ($this->loaded === false) {
-            $cacheKey = $this->cacheKey();
-            $cache = Cache::read($cacheKey);
+            $useCache = $this->useCache();
 
-            if ($this->config('cache') === false || $cache === false) {
+            $cacheKey = $this->cacheKey();
+            $cache = true === $useCache ? Cache::read($cacheKey) : false;
+
+            if (false === $cache) {
                 $cache = [];
 
                 foreach ((array)$this->config('formatters') as $callback => $conditions) {
@@ -183,7 +180,7 @@ class FormattableBehavior extends Behavior
                     }
                 }
 
-                if ($this->config('cache') !== false) {
+                if (true === $useCache) {
                     Cache::write($cacheKey, $cache);
                 }
             }

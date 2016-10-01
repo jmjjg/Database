@@ -6,22 +6,20 @@
 namespace Database\Model\Behavior;
 
 use Cake\Cache\Cache;
-use Cake\ORM\Behavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
-use Database\Utility\CodeLogic;
+use Database\Model\Behavior\AbstractDatabaseBehavior;
+use Database\Utility\CodeLogic\CacheKey;
 
 /**
  * The class AutoValidateBehavior from the Database plugin automatically adds
  * the minimal rules ensuring no database exception.
  *
- * INFO: put in a Database plugin ?
- *
  * Rules are added from field definitions, unique indexes and foreign keys.
  */
-class AutovalidateBehavior extends Behavior
+class AutovalidateBehavior extends AbstractDatabaseBehavior
 {
     /**
      * Default configuration.
@@ -118,16 +116,18 @@ class AutovalidateBehavior extends Behavior
      *
      * @return string
      */
-    protected function cacheKey()
+    public function cacheKey()
     {
         if ($this->cacheKey === null) {
-            $plugin = Inflector::underscore(CodeLogic::root(__CLASS__));
-            $class = Inflector::underscore(CodeLogic::tail(__CLASS__));
-            $connection = Inflector::underscore($this->_table->connection()->configName());
-            $table = Inflector::underscore($this->_table->table());
-            $lang = strtolower(ini_get('intl.default_locale'));
-            $domain = $this->config('domain');
-            $this->cacheKey = $plugin . '_' . $class . '_' . $connection . '_' . $table . '_' . $lang . '_' . $domain;
+            $this->cacheKey = implode(
+                '_',
+                [
+                    CacheKey::behavior($this),
+                    CacheKey::table($this->_table),
+                    strtolower(ini_get('intl.default_locale')),
+                    $this->config('domain')
+                ]
+            );
         }
 
         return $this->cacheKey;
@@ -251,17 +251,20 @@ class AutovalidateBehavior extends Behavior
     protected function getCached($type)
     {
         if ($this->loaded === false) {
+            $useCache = $this->useCache();
+
             $cacheKey = $this->cacheKey();
+            $cache = true === $useCache ? Cache::read($cacheKey) : false;
 
-            $cache = Cache::read($cacheKey);
-
-            if ($this->config('cache') === false || $cache === false) {
+            if (false === $cache) {
                 $cache = $this->extractColumnDefinitions();
                 foreach ($this->extractConstraints() as $key => $value) {
                     $cache[$key] = array_merge((array)Hash::get($cache, $key), $value);
                 }
 
-                Cache::write($cacheKey, $cache);
+                if (true === $useCache) {
+                    Cache::write($cacheKey, $cache);
+                }
             }
 
             $this->cache = $cache;

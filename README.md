@@ -28,6 +28,29 @@ Assuming the plugin is installed under `plugins/Database`, add the following to
 Plugin::load('Database', ['autoload' => true]);
 ```
 
+### Settings
+
+The following global settings can optionally be added to the `config/app.php` file.
+
+```php
+return [
+    // ...
+    'plugin' =>  [
+        // Custom Database plugin behavior configuration
+        'Database' => [
+            'AutovalidateBehavior' => [
+                'cache' => false
+            ],
+            'FormattableBehavior' => [
+                'cache' => false
+            ]
+        ]
+    ],
+    // ...
+];
+
+```
+
 ## Usage
 
 The following code should be added to your table classes, inside the initialize() method.
@@ -46,7 +69,7 @@ public function initialize(array $config)
                 // Default values
                 // 1°) Accepted validator names, as a string or an array of strings, NULL for any
                 'accepted' => null,
-                // 2°) Cache validation rules and their error messages ?
+                // 2°) Cache validation rules and their error messages ? NULL for global settings
                 'cache' => null,
                 // 3°) Domain to use for error messages
                 'domain' => 'database'
@@ -57,7 +80,7 @@ public function initialize(array $config)
             [
                 'className' => 'Database.Formattable',
                 // Default values
-                // 1°) Cache formatters and the field list they apply to ?
+                // 1°) Cache formatters and the field list they apply to ? NULL for global settings
                 'cache' => null,
                 // 2°) List of formatter functions or static methods as keys, fields they apply to as values
                     // a°) A NOT key is allowed to negate the condition
@@ -85,6 +108,6 @@ public function initialize(array $config)
 
 ### Code quality
 ```bash
-sudo bash -c "( rm -r logs/quality ; find . -type f -regex '^\./\(logs/.*\.log\|tmp/.*\)$' ! -name 'empty' -exec rm {} \; )"
+sudo bash -c "( rm -rf logs/quality ; find logs -type f -iname '*.log' -exec rm {} \;  ; find tmp -type f ! -name 'empty' -exec rm {} \; )"
 sudo -u apache ant quality -f plugins/Database/vendor/Jenkins/build.xml
 ```
