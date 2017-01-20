@@ -109,5 +109,5 @@ public function initialize(array $config)
 ### Code quality
 ```bash
 sudo bash -c "( rm -rf logs/quality ; find logs -type f -iname '*.log' -exec rm {} \;  ; find tmp -type f ! -name 'empty' -exec rm {} \; )"
-sudo -u apache ant quality -f plugins/Database/vendor/Jenkins/build.xml
+sudo -u apache ant quality -f vendor/jmjjg/cakephp3-database/vendor/Jenkins/build.xml
 ```

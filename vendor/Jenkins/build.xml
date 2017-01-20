@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="DatabasePlugin" default="build" basedir="../../../../">
+<project name="Cakephp3DatabasePlugin" default="build" basedir="../../../../../">
 	<property name="dir.ant.build" value="${basedir}/tmp/quality/Database" />
 	<property name="dir.ant.logs" value="${basedir}/logs/quality/Database" />
 	<property name="dir.ant.artifacts" value="${dir.ant.logs}/artifacts" />
 	<property name="dir.cakephp.app" value="${basedir}" />
-	<property name="dir.cakephp.plugin" value="${dir.cakephp.app}/plugins/Database" />
+	<property name="dir.plugin.relative" value="vendor/jmjjg/cakephp3-database" />
+	<property name="dir.cakephp.plugin" value="${dir.cakephp.app}/${dir.plugin.relative}" />
 	<property name="dir.cakephp.tmp" value="${dir.cakephp.app}/tmp" />
     <property name="file.phpcs.ruleset" value="${dir.cakephp.plugin}/vendor/Jenkins/phpcs.xml" />
 	<property name="file.phpmd.ruleset" value="${dir.cakephp.plugin}/vendor/Jenkins/phpmd.xml" />
@@ -101,7 +102,7 @@
 					   --log-junit ${dir.ant.logs}/phpunit.xml
                        --coverage-html ${dir.ant.logs}/coverage
                        --coverage-clover ${dir.ant.logs}/phpunit.coverage.xml
-                       plugins/Database/" />
+                       ${dir.plugin.relative}/" />
 		</exec>
 	</target>
 
@@ -112,7 +113,7 @@
                        --verbose
                        --debug
 					   --configuration ${file.phpunit.config}
-                       plugins/Database/" />
+                       ${dir.plugin.relative}/" />
 		</exec>
 	</target>
 

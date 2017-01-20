@@ -4,7 +4,7 @@
 	processIsolation="false"
 	stopOnFailure="false"
 	syntaxCheck="false"
-	bootstrap="../../../../tests/bootstrap.php"
+	bootstrap="../../../../../tests/bootstrap.php"
 	timeoutForSmallTests="1"
 	timeoutForMediumTests="10"
 	timeoutForLargeTests="60"
@@ -25,7 +25,7 @@
 	<listeners>
 		<listener
 		class="\Cake\TestSuite\Fixture\FixtureInjector"
-		file="../../../../vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
+		file="../../../../../vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
 			<arguments>
 				<object class="\Cake\TestSuite\Fixture\FixtureManager" />
 			</arguments>
