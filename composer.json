@@ -1,0 +1,28 @@
+{
+    "name": "jmjjg/cakephp3-database",
+    "description": "CakePHP 3 plugin that provides classes for adding default validation rules from the database table schema and cleaning data being saved.",
+    "keywords": ["CakePHP", "Database", "Validation", "Marshalling"],
+    "homepage" : "https://github.com/jmjjg/cakephp3-database",
+    "license": "GPL-2.0+",
+    "type": "cakephp-plugin",
+    "require": {
+        "cakephp/cakephp": ">=3.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer" : "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Database\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Database\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "installer-name": "Database"
+    }
+}
