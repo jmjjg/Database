@@ -33,7 +33,6 @@ trait PluginConfigTrait
             $useCache = Configure::read($configureKey);
         }
 
-        $result = null === $useCache ? false === Configure::read('debug') : (bool)$useCache;
-        return $result;
+        return null === $useCache ? false === Configure::read('debug') : (bool)$useCache;
     }
 }
