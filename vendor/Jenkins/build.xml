@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Cakephp3DatabasePlugin" default="build" basedir="../../../../../">
 	<property name="dir.ant.build" value="${basedir}/tmp/quality/Database" />
-	<property name="dir.ant.logs" value="${basedir}/logs/quality/Database" />
-	<property name="dir.ant.artifacts" value="${dir.ant.logs}/artifacts" />
-	<property name="dir.cakephp.app" value="${basedir}" />
+	<property name="dir.ant.output" value="${basedir}/logs/quality/Database" />
+	<property name="dir.ant.logs" value="${dir.ant.output}/logs" />
+	<property name="dir.ant.artifacts" value="${dir.ant.output}/artifacts" />
+	<property name="dir.cakephp.app" location="${basedir}" />
 	<property name="dir.plugin.relative" value="vendor/jmjjg/cakephp3-database" />
 	<property name="dir.cakephp.plugin" value="${dir.cakephp.app}/${dir.plugin.relative}" />
 	<property name="dir.cakephp.tmp" value="${dir.cakephp.app}/tmp" />
@@ -22,16 +23,17 @@
 		<delete verbose="true">
 			<fileset dir="${dir.cakephp.tmp}" excludes="**/.svn,**/empty" />
 		</delete>
-        <delete dir="${dir.ant.logs}" verbose="true" />
+        <delete dir="${dir.ant.output}" verbose="true" />
 	</target>
 
 	<!-- Log folders creation -->
 	<target name="clean" depends="clear">
-		<mkdir dir="${dir.ant.logs}" />
-		<mkdir dir="${dir.ant.logs}/api" />
+		<mkdir dir="${dir.ant.output}" />
+		<mkdir dir="${dir.ant.output}/api" />
 		<mkdir dir="${dir.ant.artifacts}" />
-		<mkdir dir="${dir.ant.logs}/coverage" />
-		<mkdir dir="${dir.ant.logs}/php-code-browser" />
+		<mkdir dir="${dir.ant.logs}" />
+		<mkdir dir="${dir.ant.output}/coverage" />
+		<mkdir dir="${dir.ant.output}/php-code-browser" />
 	</target>
 
 	<!-- Syntax checking for .php and .ctp files -->
@@ -100,7 +102,7 @@
                        --debug
 					   --configuration ${file.phpunit.config}
 					   --log-junit ${dir.ant.logs}/phpunit.xml
-                       --coverage-html ${dir.ant.logs}/coverage
+                       --coverage-html ${dir.ant.output}/coverage
                        --coverage-clover ${dir.ant.logs}/phpunit.coverage.xml
                        ${dir.plugin.relative}/" />
 		</exec>
@@ -119,21 +121,27 @@
 
 	<!-- Code metrics (files, classes, etc) -->
 	<target name="phploc" depends="clean,php-lint">
-		<exec executable="phploc">
+		<exec executable="phploc" dir="${basedir}">
 			<arg value="--log-csv" />
-			<arg value="${dir.ant.logs}/phploc.csv" />
+			<arg value="${dir.ant.output}/phploc.csv" />
 			<arg path="${dir.cakephp.plugin}" />
 		</exec>
 	</target>
 
 	<!-- Documentation -->
 	<target name="phpdoc" depends="clean,php-lint">
-		<exec executable="phpdoc" dir="${dir.cakephp.plugin}" failonerror="false" logerror="on">
-			<arg line="--title '${ant.project.name}'
-				-t ${dir.ant.logs}/api
-				-i ${ignorelist}
-				-d ."/>
-			</exec>
+        <echo message="${dir.cakephp.plugin}/src" />
+		<exec executable="phpdoc" dir="${basedir}" failonerror="false" logerror="on">
+			<arg line="-d ${dir.cakephp.plugin}/src
+                       -t ${dir.ant.output}/api
+                       --template=clean
+                       --template=checkstyle
+                       --force"/>
+        </exec>
+        <move
+            file="${dir.ant.output}/api/checkstyle.xml"
+            tofile="${dir.ant.logs}/phpdoc-checkstyle.xml"/>
+         <replace file="${dir.ant.logs}/phpdoc-checkstyle.xml" token="file name=&quot;" value="file name=&quot;${dir.cakephp.plugin}/src/"/>
 	</target>
 
 	<!-- Checkstyle -->
@@ -152,7 +160,7 @@
 	<!-- Mess detector -->
 	<target name="phpmd" depends="clean,php-lint">
 		<exec executable="phpmd"
-			dir="${dir.cakephp.plugin}"
+			dir="${basedir}"
 			failonerror="false">
 			<arg line="${dir.cakephp.plugin}/src,${dir.cakephp.plugin}/tests
                        xml ${file.phpmd.ruleset}
@@ -164,39 +172,38 @@
 	<!-- Dépendences -->
 	<target name="pdepend" depends="clean,php-lint">
 		<exec executable="pdepend"
-			dir="${dir.cakephp.plugin}"
+			dir="${basedir}"
 			failonerror="false">
 			<arg line="--jdepend-xml=${dir.ant.logs}/jdepend.xml
 				--jdepend-chart=${dir.ant.artifacts}/10-dependencies.svg
 				--overview-pyramid=${dir.ant.artifacts}/11-overview.svg
-				--ignore=${ignorelist}
-				." />
+				${dir.cakephp.plugin}/src" />
 		</exec>
 	</target>
 
 	<!-- Copy/paste detector -->
 	<target name="phpcpd" depends="clean,php-lint">
 		<exec executable="phpcpd"
-			dir="${dir.cakephp.plugin}"
+			dir="${basedir}"
 			failonerror="false">
 			<arg line="--log-pmd ${dir.ant.logs}/pmd-cpd.xml
 				--min-lines 5
 				--min-tokens 70
 				--exclude ${ignorelist}
 				--names *.php,*.ctp
-				." />
+				${dir.cakephp.plugin}/src" />
 		</exec>
 	</target>
 
 	<!-- Code browser -->
-	<target name="phpcb" depends="clean,php-lint">
+	<!--<target name="phpcb" depends="clean,php-lint">-->
+	<target name="phpcb">
 		<exec executable="phpcb"
-			dir="${dir.cakephp.plugin}"
+			dir="${basedir}"
 			failonerror="false">
 			<arg line="--log ${dir.ant.logs}
-				--source ${dir.cakephp.plugin}
-				-E /\/(vendor)\//
-				--output ${dir.ant.logs}/php-code-browser
+				--source ${dir.cakephp.plugin}/src
+				--output ${dir.ant.output}/php-code-browser
 				--crapThreshold=10
 			." />
 		</exec>
