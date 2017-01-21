@@ -178,7 +178,7 @@ class AutovalidateBehaviorTest extends TestCase
                     'provider' => 'default',
                     'pass' => []
                 ],
-                'isEmptyAllowed' => false, // FIXME
+                'isEmptyAllowed' => true,
                 'isPresenceRequired' => false
             ],
             // String
