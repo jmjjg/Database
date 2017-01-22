@@ -7,7 +7,7 @@ the database table schema and cleaning data being saved.
 
 Caching is enabled by default but can be disabled in the configuration or at run-time.
 
-Tested with  3.2.2 only (was -CakePHP 3.1.0-RC1-).
+Works well only with CakePHP 3.3.x (tested with CakePHP 3.3.12).
 
 ## Main classes
 
