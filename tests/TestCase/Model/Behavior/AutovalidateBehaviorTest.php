@@ -307,6 +307,10 @@ class AutovalidateBehaviorTest extends TestCase
      */
     public function testFieldInfos()
     {
+		if(true === version_compare(Configure::version(), '3.1.0', '<')) {
+			$this->markTestSkipped('CakePHP version < 3.1.0');
+		}
+
         $this->clear('DatabaseAutovalidate');
         // @fixme
         Configure::write('plugin.Database.AutovalidateBehavior', true);

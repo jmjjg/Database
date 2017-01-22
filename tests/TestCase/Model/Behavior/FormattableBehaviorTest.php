@@ -6,6 +6,7 @@
  */
 namespace Database\Test\TestCase\Model\Behavior;
 
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -67,6 +68,10 @@ class FormattableBehaviorTest extends TestCase
      */
     public function testDefaultConfig()
     {
+		if(true === version_compare(Configure::version(), '3.1.0', '<')) {
+			$this->markTestSkipped('CakePHP version < 3.1.0');
+		}
+
         ini_set('intl.default_locale', 'fr_FR');
         $this->Items->addBehavior(
             'DatabaseFormattable',
@@ -96,6 +101,10 @@ class FormattableBehaviorTest extends TestCase
      */
     public function testAlternateConfig()
     {
+		if(true === version_compare(Configure::version(), '3.1.0', '<')) {
+			$this->markTestSkipped('CakePHP version < 3.1.0');
+		}
+
         ini_set('intl.default_locale', 'fr_FR');
         $this->Items->addBehavior(
             'DatabaseFormattable',
